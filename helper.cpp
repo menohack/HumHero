@@ -100,13 +100,14 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
     if (abs(min) > abs(max))
         max = abs(min);
 
+    //Scale the graph so that it is easier to see
     max *= 1.1;
+
 
     qreal r = elapsed/1000.0;
     int n = 1024;
     for (int i = 0; i < n; ++i) {
-        painter->drawEllipse(QRectF(i, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][0] / max,
-                                    1, 1));
+        painter->drawPoint(i, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][0] / max);
     }
 
     fourier_free(in, out);
