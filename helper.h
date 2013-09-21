@@ -48,6 +48,8 @@
 #include "fourier.h"
 
 #define GRAPH_HEIGHT 512
+#define NUM_WINDOWS 10
+
 
 QT_BEGIN_NAMESPACE
 class QPainter;
@@ -75,8 +77,11 @@ private:
     QPen textPen;
 
     fftw_complex * in, * out;
-    float * mic_sample;
+    float * mic_sample, * window_sample;
+    int windowCount, xShift, xScale;
 
+
+    void find_notes(float * frequencies, float ** notes, int * numNotes);
 };
 //! [0]
 

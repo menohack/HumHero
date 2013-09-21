@@ -40,7 +40,6 @@
 
 #include <QtGui>
 #include "helper.h"
-#include <string>
 
 #include "microphone.h"
 
@@ -55,7 +54,7 @@ Helper::Helper()
     circleBrush = QBrush(gradient);
     circlePen = QPen(Qt::black);
     circlePen.setWidth(1);
-    textPen = QPen(Qt::white);
+    textPen = QPen(Qt::black);
     textFont.setPixelSize(50);
 
     microphone_start();
@@ -65,12 +64,22 @@ Helper::Helper()
     out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * SAMPLES_PER_FRAME);
 
     mic_sample = new float[SAMPLES_PER_FRAME];
+    window_sample = new float[SAMPLES_PER_FRAME];
+
+    windowCount = 0;
+
+    //Skip some low frequencies which tend to be noise
+    xShift = 10;
+
+    //Scale the frequencies to be larger than a pixel
+    xScale = 20;
 }
 
 Helper::~Helper()
 {
     fourier_free(in, out);
     delete [] mic_sample;
+    delete [] window_sample;
 }
 
 //! [0]
@@ -95,6 +104,26 @@ double find_min(fftw_complex * in, int length)
 }
 
 
+void Helper::find_notes(float * frequencies, float ** notes, int * numNotes)
+{
+    *numNotes = 1;
+    *notes = new float[*numNotes];
+
+    float max = -999;
+    float position;
+
+    for (int i=0; i < SAMPLES_PER_FRAME - xShift; i++)
+    {
+        if (abs(frequencies[i + xShift]) > max)
+        {
+            max = abs(frequencies[i + xShift]);
+            position = i + xShift;
+        }
+    }
+
+    *notes[0] = position;
+}
+
 //! [1]
 void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
 {
@@ -110,7 +139,7 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
 
 
     run_microphone(mic_sample, SAMPLES_PER_FRAME);
-    run_playback(mic_sample, SAMPLES_PER_FRAME);
+    //run_playback(mic_sample, SAMPLES_PER_FRAME);
 
 
     for (int i=0; i < SAMPLES_PER_FRAME; i++)
@@ -121,7 +150,18 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
 
 
 
-    //run_fourier(in, out, SAMPLES_PER_FRAME);
+    run_fourier(in, out, SAMPLES_PER_FRAME);
+
+    //Reset the summation at the first window
+    if (windowCount == NUM_WINDOWS)
+        windowCount == 0;
+
+    for (int i=0; i < SAMPLES_PER_FRAME; i++)
+    {
+        if (windowCount == 0)
+            window_sample[i] = 0.0;
+        window_sample[i] += out[i][0] / NUM_WINDOWS;
+    }
 
     //double max = find_max(in, SAMPLES_PER_FRAME);
     //double min = find_min(in, SAMPLES_PER_FRAME);
@@ -133,12 +173,17 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
     //Scale the graph so that it is easier to see
     //max *= 1.1;
 
+
+
     int n = 1024;
-    for (int i = 0; i < SAMPLES_PER_FRAME/2-1; i++) {
+    for (int i = 0; i < SAMPLES_PER_FRAME/xScale-xShift; i++) {
         //painter->drawPoint(i, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][0] / max);
-        painter->drawLine(i*2, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][1] / max, (i+1)*2, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i+1][1] / max);
+        painter->drawLine(i*xScale, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * window_sample[i+xShift] / max, (i+1)*xScale, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * window_sample[i+xShift+1] / max);
     }
 
+    float * notes;
+    int numNotes;
+    find_notes(window_sample, &notes, &numNotes);
 
     painter->restore();
 //! [2]
@@ -148,6 +193,8 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
     painter->setFont(textFont);
     char buffer[32];
     //std::to_string(elapsed);
-    //painter->drawText(QRect(-50, -50, 100, 100), Qt::AlignCenter, itoa(elapsed, buffer, 10));
+    snprintf(buffer, 32, "%f", notes[0]);
+    printf("%f\n", notes[0]);
+    painter->drawText(QRect(0, -0, 300, 100), Qt::AlignCenter, buffer);
 }
 //! [3]
