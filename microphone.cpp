@@ -11,8 +11,6 @@
 #include <pulse/simple.h>
 #include <pulse/error.h>
 
-#include <fftw.h>
-
 
 #define BUFSIZE 32
 
