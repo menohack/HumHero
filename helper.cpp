@@ -40,6 +40,7 @@
 
 #include <QtGui>
 #include "helper.h"
+#include <string>
 
 #include "microphone.h"
 
@@ -109,7 +110,7 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
 
 
     run_microphone(mic_sample, SAMPLES_PER_FRAME);
-
+    run_playback(mic_sample, SAMPLES_PER_FRAME);
 
 
     for (int i=0; i < SAMPLES_PER_FRAME; i++)
@@ -120,7 +121,7 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
 
 
 
-    run_fourier(in, out, SAMPLES_PER_FRAME);
+    //run_fourier(in, out, SAMPLES_PER_FRAME);
 
     //double max = find_max(in, SAMPLES_PER_FRAME);
     //double min = find_min(in, SAMPLES_PER_FRAME);
@@ -133,9 +134,9 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
     //max *= 1.1;
 
     int n = 1024;
-    for (int i = 0; i < SAMPLES_PER_FRAME-1; i++) {
+    for (int i = 0; i < SAMPLES_PER_FRAME/2-1; i++) {
         //painter->drawPoint(i, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][0] / max);
-        painter->drawLine(i, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][0] / max, i+1, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i+1][0] / max);
+        painter->drawLine(i*2, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][1] / max, (i+1)*2, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i+1][1] / max);
     }
 
 
@@ -145,6 +146,8 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
 //! [3]
     painter->setPen(textPen);
     painter->setFont(textFont);
-    painter->drawText(QRect(-50, -50, 100, 100), Qt::AlignCenter, "Qt");
+    char buffer[32];
+    //std::to_string(elapsed);
+    //painter->drawText(QRect(-50, -50, 100, 100), Qt::AlignCenter, itoa(elapsed, buffer, 10));
 }
 //! [3]

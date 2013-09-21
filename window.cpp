@@ -64,7 +64,7 @@ Window::Window()
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), native, SLOT(animate()));
     //connect(timer, SIGNAL(timeout()), openGL, SLOT(animate()));
-    timer->start(50);
+    timer->start(16);
 
     setWindowTitle(tr("2D Painting on Native and OpenGL Widgets"));
 }
