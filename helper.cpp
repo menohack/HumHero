@@ -40,7 +40,8 @@
 
 #include <QtGui>
 #include "helper.h"
-#include "fourier.h"
+
+#include "microphone.h"
 
 //! [0]
 Helper::Helper()
@@ -55,8 +56,24 @@ Helper::Helper()
     circlePen.setWidth(1);
     textPen = QPen(Qt::white);
     textFont.setPixelSize(50);
+
+    microphone_start();
+
+
+    in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * SAMPLES_PER_FRAME);
+    out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * SAMPLES_PER_FRAME);
+
+    mic_sample = new float[SAMPLES_PER_FRAME];
 }
+
+Helper::~Helper()
+{
+    fourier_free(in, out);
+    delete [] mic_sample;
+}
+
 //! [0]
+
 
 double find_max(fftw_complex * in, int length)
 {
@@ -76,6 +93,7 @@ double find_min(fftw_complex * in, int length)
     return min;
 }
 
+
 //! [1]
 void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
 {
@@ -89,28 +107,37 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
     painter->setPen(circlePen);
     //painter->rotate(elapsed * 0.030);
 
-    fftw_complex * in, * out;
-    run_fourier(&in, &out);
 
-    double yScale = 20.0;
-
-    double max = find_max(in, 1024);
-    double min = find_min(in, 1024);
-
-    if (abs(min) > abs(max))
-        max = abs(min);
-
-    //Scale the graph so that it is easier to see
-    max *= 1.1;
+    run_microphone(mic_sample, SAMPLES_PER_FRAME);
 
 
-    qreal r = elapsed/1000.0;
-    int n = 1024;
-    for (int i = 0; i < n; ++i) {
-        painter->drawPoint(i, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][0] / max);
+
+    for (int i=0; i < SAMPLES_PER_FRAME; i++)
+    {
+        in[i][0] = mic_sample[i];
+        in[i][1] = 0.0;
     }
 
-    fourier_free(in, out);
+
+
+    run_fourier(in, out, SAMPLES_PER_FRAME);
+
+    //double max = find_max(in, SAMPLES_PER_FRAME);
+    //double min = find_min(in, SAMPLES_PER_FRAME);
+    double max = 1.0;
+
+    //if (abs(min) > abs(max))
+    //    max = abs(min);
+
+    //Scale the graph so that it is easier to see
+    //max *= 1.1;
+
+    int n = 1024;
+    for (int i = 0; i < SAMPLES_PER_FRAME-1; i++) {
+        //painter->drawPoint(i, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][0] / max);
+        painter->drawLine(i, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i][0] / max, i+1, GRAPH_HEIGHT/2 - GRAPH_HEIGHT/2 * in[i+1][0] / max);
+    }
+
 
     painter->restore();
 //! [2]

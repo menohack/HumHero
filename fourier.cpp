@@ -33,18 +33,15 @@ void print_result(fftw_complex * output, int length)
 	printf("\n");
 }
 
-void run_fourier(fftw_complex ** in, fftw_complex ** out)
+void run_fourier(fftw_complex * in, fftw_complex * out, int N)
 {
-	int N = 1024;
-
 	fftw_plan p;
-    *in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-    *out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+
 	
-    make_input(*in, N);
+    //make_input(in, N);
 	//print_result(in, N);
 	
-    p = fftw_plan_dft_1d(N, *in, *out, FFTW_FORWARD, FFTW_ESTIMATE);
+    p = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
 	fftw_execute(p); /* repeat as needed */
 
 	//print_result(out, N);

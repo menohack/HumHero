@@ -45,6 +45,8 @@
 #include <QFont>
 #include <QPen>
 
+#include "fourier.h"
+
 #define GRAPH_HEIGHT 512
 
 QT_BEGIN_NAMESPACE
@@ -52,11 +54,15 @@ class QPainter;
 class QPaintEvent;
 QT_END_NAMESPACE
 
+#define SAMPLES_PER_FRAME 44100/60
+
+
 //! [0]
 class Helper
 {
 public:
     Helper();
+    ~Helper();
 
 public:
     void paint(QPainter *painter, QPaintEvent *event, int elapsed);
@@ -67,6 +73,10 @@ private:
     QFont textFont;
     QPen circlePen;
     QPen textPen;
+
+    fftw_complex * in, * out;
+    float * mic_sample;
+
 };
 //! [0]
 

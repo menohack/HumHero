@@ -4,13 +4,15 @@ HEADERS     = glwidget.h \
               helper.h \
               widget.h \
               window.h \
-    fourier.h
+    fourier.h \
+    microphone.h
 SOURCES     = glwidget.cpp \
               helper.cpp \
               main.cpp \
               widget.cpp \
               window.cpp \
-    fourier.cpp
+    fourier.cpp \
+    microphone.cpp
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/opengl/2dpainting
@@ -25,3 +27,5 @@ symbian: warning(This example might not fully work on Symbian platform)
 simulator: warning(This example might not fully work on Simulator platform)
 
 unix|win32: LIBS += -lfftw3
+
+unix|win32: LIBS += -lpulse-simple
