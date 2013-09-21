@@ -1,18 +1,20 @@
 QT          += opengl
 
-HEADERS     = glwidget.h \
+HEADERS     = \
               helper.h \
               widget.h \
               window.h \
     fourier.h \
-    microphone.h
-SOURCES     = glwidget.cpp \
+    microphone.h \
+    notesgrid.h
+SOURCES     = \
               helper.cpp \
               main.cpp \
               widget.cpp \
               window.cpp \
     fourier.cpp \
-    microphone.cpp
+    microphone.cpp \
+    notesgrid.cpp
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/opengl/2dpainting

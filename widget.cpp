@@ -52,7 +52,7 @@ Widget::Widget(Helper *helper, QWidget *parent)
 }
 //! [0]
 
-//! [1]
+//! [1]    //GLWidget *openGL = new GLWidget(&helper, this);
 void Widget::animate()
 {
     elapsed = (elapsed + qobject_cast<QTimer*>(sender())->interval()) % 1000;
