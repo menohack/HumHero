@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QPushButton>
+#include <QCoreApplication>
 
 NotesGrid::NotesGrid(QWidget *parent)
     : QWidget(parent)
@@ -41,7 +42,17 @@ NotesGrid::NotesGrid(QWidget *parent)
 
     notes->setHorizontalSpacing(20);
     notes->setVerticalSpacing(20);
-    notes->addWidget(new QPushButton(tr("H")), 4, 2);
+
+
+    QPushButton * button = new QPushButton;
+
+    QPixmap pixmap(QCoreApplication::applicationDirPath() + "/../2dpainting/button.png");
+    QIcon ButtonIcon(pixmap);
+    button->setIcon(ButtonIcon);
+    button->setIconSize(pixmap.rect().size());
+    button->setDefault(true);
+
+    notes->addWidget(button, 4, 2);
     notes->addWidget(new QPushButton(tr("Q")), 4, 10);
 
     //Add the two layouts to our master layout
