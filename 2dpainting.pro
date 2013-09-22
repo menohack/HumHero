@@ -31,3 +31,5 @@ simulator: warning(This example might not fully work on Simulator platform)
 unix|win32: LIBS += -lfftw3
 
 unix|win32: LIBS += -lpulse-simple
+
+unix|win32: LIBS += -lpulse

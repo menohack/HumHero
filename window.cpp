@@ -48,18 +48,21 @@ Window::Window()
     : QWidget()
 {
     Widget *native = new Widget(&helper, this);
+    Widget *noteheader = new Widget(&helper, this);
+    Widget *newlable = new Widget(&helper, this);
     QLabel *nativeLabel = new QLabel(tr("Native"));
     nativeLabel->setAlignment(Qt::AlignHCenter);
     NotesGrid * notesGrid = new NotesGrid(this);
+    //QTabletEvent *
 
 
     QGridLayout *layout = new QGridLayout;
-    layout->addWidget(notesGrid, 0, 0);
-    layout->addWidget(native, 1, 0);
+    //notesGrid->addWidget(noteheader, 1, 0);
+    //notesGrid->addWidget(newlable, 2, 0);
     //layout->addWidget(openGL, 0, 1);
-    layout->addWidget(nativeLabel, 2, 0);
+    //layout->addWidget(nativeLabel, 2, 0);
     //layout->addWidget(openGLLabel, 1, 1);
-    setLayout(layout);
+    //setLayout(layout);
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), native, SLOT(animate()));

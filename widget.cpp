@@ -48,7 +48,7 @@ Widget::Widget(Helper *helper, QWidget *parent)
     : QWidget(parent), helper(helper)
 {
     elapsed = 0;
-    setFixedSize(1024, GRAPH_HEIGHT);
+    setFixedSize(800, 350);
 }
 //! [0]
 

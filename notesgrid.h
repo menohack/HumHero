@@ -30,6 +30,8 @@ private:
     QFont textFont;
     QPen textPen;
     QGridLayout * layout;
+    QGridLayout * gridhead;
+    QGridLayout * grid;
     QLabel * text;
     int elapsed;
 };
