@@ -1,6 +1,7 @@
 #include "notesgrid.h"
 
 #include <QPainter>
+#include <QPushButton>
 
 NotesGrid::NotesGrid(QWidget *parent)
     : QWidget(parent)
@@ -13,8 +14,12 @@ NotesGrid::NotesGrid(QWidget *parent)
 
     //Create our master layout (it may contain sub layouts)
     layout = new QGridLayout;
-    gridhead = new QGridLayout;
-    grid = new QGridLayout;
+
+    //Create the grid for the labels
+    labels = new QGridLayout;
+
+    //Create the grid for the notes
+    notes = new QGridLayout;
 
     //Make our first text box
     QLabel * G = new QLabel(tr("G"));
@@ -25,15 +30,23 @@ NotesGrid::NotesGrid(QWidget *parent)
     QLabel * B = new QLabel(tr("B"));
     QLabel * A = new QLabel(tr("A"));
 
-    //Adds the text object to the grid layout at position 0,0
-    //layout->addWidget(text, 0, 0);
-    gridhead->addWidget(G, 0, 0);
-    layout->addWidget(F, 1, 0);
-    layout->addWidget(E, 2, 0);
-    layout->addWidget(D, 3, 0);
-    layout->addWidget(C, 4, 0);
-    layout->addWidget(B, 5, 0);
-    layout->addWidget(A, 6, 0);
+    //Add the labels to the left labels layout
+    labels->addWidget(G, 0, 0);
+    labels->addWidget(F, 1, 0);
+    labels->addWidget(E, 2, 0);
+    labels->addWidget(D, 3, 0);
+    labels->addWidget(C, 4, 0);
+    labels->addWidget(B, 5, 0);
+    labels->addWidget(A, 6, 0);
+
+    notes->setHorizontalSpacing(20);
+    notes->setVerticalSpacing(20);
+    notes->addWidget(new QPushButton(tr("H")), 4, 2);
+    notes->addWidget(new QPushButton(tr("Q")), 4, 10);
+
+    //Add the two layouts to our master layout
+    layout->addLayout(labels, 0, 0);
+    layout->addLayout(notes, 0, 1);
 
     //This only needs to happen once you have filled your layout
     setLayout(layout);

@@ -48,9 +48,7 @@ Window::Window()
     : QWidget()
 {
     Widget *native = new Widget(&helper, this);
-    Widget *noteheader = new Widget(&helper, this);
-    Widget *newlable = new Widget(&helper, this);
-    QLabel *nativeLabel = new QLabel(tr("Native"));
+    QLabel *nativeLabel = new QLabel(tr("Fourier transform"));
     nativeLabel->setAlignment(Qt::AlignHCenter);
     NotesGrid * notesGrid = new NotesGrid(this);
     //QTabletEvent *
@@ -62,7 +60,10 @@ Window::Window()
     //layout->addWidget(openGL, 0, 1);
     //layout->addWidget(nativeLabel, 2, 0);
     //layout->addWidget(openGLLabel, 1, 1);
-    //setLayout(layout);
+    layout->addWidget(native, 1, 0);
+    layout->addWidget(nativeLabel, 2, 0);
+    layout->addWidget(notesGrid, 0, 0);
+    setLayout(layout);
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), native, SLOT(animate()));
