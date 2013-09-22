@@ -51,25 +51,21 @@ Window::Window()
     QLabel *nativeLabel = new QLabel(tr("Fourier transform"));
     nativeLabel->setAlignment(Qt::AlignHCenter);
     NotesGrid * notesGrid = new NotesGrid(this);
-    //QTabletEvent *
 
 
     QGridLayout *layout = new QGridLayout;
-    //notesGrid->addWidget(noteheader, 1, 0);
-    //notesGrid->addWidget(newlable, 2, 0);
-    //layout->addWidget(openGL, 0, 1);
-    //layout->addWidget(nativeLabel, 2, 0);
-    //layout->addWidget(openGLLabel, 1, 1);
+
     layout->addWidget(native, 1, 0);
     layout->addWidget(nativeLabel, 2, 0);
     layout->addWidget(notesGrid, 0, 0);
+
     setLayout(layout);
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), native, SLOT(animate()));
-    //connect(timer, SIGNAL(timeout()), openGL, SLOT(animate()));
+
     timer->start(16);
 
-    setWindowTitle(tr("2D Painting on Native and OpenGL Widgets"));
+    setWindowTitle(tr("HumHero"));
 }
 //! [0]

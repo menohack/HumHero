@@ -110,7 +110,7 @@ void Helper::find_notes(float * frequencies, float ** notes, int * numNotes)
     *notes = new float[*numNotes];
 
     float max = -999;
-    float position;
+    float position = 0;
 
     for (int i=xShift; i < SAMPLES_PER_FRAME; i++)
     {
@@ -194,6 +194,6 @@ void Helper::paint(QPainter *painter, QPaintEvent *event, int elapsed)
     char buffer[32];
     //std::to_string(elapsed);
     snprintf(buffer, 32, "%f", notes[0]);
-    painter->drawText(QRect(0, -0, 300, 100), Qt::AlignCenter, buffer);
+    painter->drawText(QRect(0, 0, 300, 100), Qt::AlignCenter, buffer);
 }
 //! [3]
